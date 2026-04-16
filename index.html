@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!-- saved from url=(0042)file:///Users/yuta/Downloads/index_11.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>予約 - ARK モビリティレンタル</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+:root{--primary:#2563eb;--primary-dark:#1e40af;--primary-light:#dbeafe;--accent:#f59e0b;--success:#10b981;--text:#1f2937;--text-light:#6b7280;--card:#fff;--border:#e5e7eb}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit',-apple-system,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:15px;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="1" fill="white" opacity="0.1"/></svg>');pointer-events:none}
+.container{max-width:100%;margin:0 auto;position:relative;z-index:1}
+.header{background:var(--card);padding:25px 20px;border-radius:16px 16px 0 0;box-shadow:0 10px 25px rgb(0 0 0/.1);text-align:center}
+.header h1{font-size:1.75rem;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-0.02em}
+.header p{color:var(--text-light);font-size:0.95rem}
+.progress-bar{display:flex;justify-content:space-between;background:var(--card);padding:20px 15px;border-left:1px solid var(--border);border-right:1px solid var(--border);position:relative}
+.progress-bar::before{content:'';position:absolute;top:50%;left:15px;right:15px;height:2px;background:var(--border);z-index:0}
+.step{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1;flex:1}
+.step-circle{width:44px;height:44px;border-radius:50%;background:var(--card);border:3px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:var(--text-light);transition:all .3s}
+.step.active .step-circle{background:var(--primary);border-color:var(--primary);color:white;box-shadow:0 0 0 3px var(--primary-light)}
+.step.completed .step-circle{background:var(--success);border-color:var(--success);color:white}
+.step-label{font-size:0.75rem;font-weight:600;color:var(--text-light);text-align:center;line-height:1.2}
+.step.active .step-label{color:var(--primary)}
+.main-content{background:var(--card);padding:25px 20px;border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 16px 16px;box-shadow:0 10px 25px rgb(0 0 0/.1)}
+.section{margin-bottom:30px;display:none}
+.section.active{display:block;animation:fadeInUp .5s}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.section-header{margin-bottom:20px}
+.section-title{font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.section-subtitle{color:var(--text-light);font-size:0.9rem}
+.calendar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.day{min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .3s;background:var(--card);position:relative;padding:12px 8px}
+.day:active{transform:scale(0.95)}
+.day.selected{border-color:var(--primary);background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;box-shadow:0 4px 12px rgb(37 99 235/.3)}
+.day-date{font-size:1.4rem;font-weight:700;position:relative;z-index:1;margin-bottom:4px}
+.day-label{font-size:0.8rem;opacity:.8;position:relative;z-index:1}
+.bus-grid{display:grid;grid-template-columns:1fr;gap:15px}
+.bus-card{min-height:110px;padding:20px;border:2px solid var(--border);border-radius:14px;cursor:pointer;transition:all .3s;background:var(--card);position:relative}
+.bus-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--primary),var(--accent));transform:scaleX(0);transform-origin:left;transition:transform .3s;border-radius:14px 14px 0 0}
+.bus-card:active{transform:scale(0.98)}
+.bus-card.selected{border-color:var(--primary);background:var(--primary-light);box-shadow:0 4px 12px rgb(37 99 235/.2)}
+.bus-card.selected::before{transform:scaleX(1)}
+.bus-card.full{opacity:.5;cursor:not-allowed;background:#f9fafb}
+.bus-card.full:active{transform:none}
+.bus-number{font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:10px}
+.bus-slots{display:flex;gap:8px;margin-bottom:10px}
+.slot{flex:1;height:10px;border-radius:5px;background:var(--border)}
+.slot.available{background:var(--success)}
+.bus-status{font-size:0.95rem;color:var(--text-light);font-weight:500}
+.bus-card.selected .bus-status{color:var(--primary);font-weight:600}
+.destination-input{width:100%;padding:16px;border:2px solid var(--border);border-radius:12px;font-size:1.05rem;font-family:'Outfit',sans-serif;transition:all .3s;background:var(--card)}
+.destination-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.btn-primary{width:100%;min-height:56px;padding:18px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;border:none;border-radius:12px;font-size:1.15rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Outfit',sans-serif;box-shadow:0 4px 12px rgb(37 99 235/.3);position:relative;overflow:hidden}
+.btn-primary:active{transform:scale(0.98)}
+.btn-primary:disabled{background:var(--border);cursor:not-allowed;transform:none;opacity:.6}
+.loading{text-align:center;padding:30px;color:var(--text-light);font-size:1rem}
+
+@media (min-width:480px){
+.calendar{grid-template-columns:repeat(4,1fr);gap:12px}
+.day{min-height:90px}
+.bus-grid{grid-template-columns:repeat(2,1fr);gap:15px}
+}
+
+@media (min-width:768px){
+.container{max-width:900px}
+.header{padding:35px 30px}
+.header h1{font-size:2.2rem}
+.header p{font-size:1.05rem}
+.progress-bar{padding:25px 30px}
+.main-content{padding:35px 30px}
+.calendar{grid-template-columns:repeat(7,1fr);gap:12px}
+.day{min-height:auto;aspect-ratio:1}
+.bus-grid{grid-template-columns:repeat(2,1fr);gap:18px}
+.section-title{font-size:1.4rem}
+}
+
+@media (min-width:1024px){
+.container{max-width:1100px}
+.header{padding:40px}
+.header h1{font-size:2.5rem}
+.main-content{padding:40px}
+.bus-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>ARK モビリティレンタル</h1>
+<p>簡単3ステップで予約完了</p>
+</div>
+<div class="progress-bar">
+<div class="step active" id="step1Indicator">
+<div class="step-circle">1</div>
+<div class="step-label">日付<br>選択</div>
+</div>
+<div class="step" id="step2Indicator">
+<div class="step-circle">2</div>
+<div class="step-label">バス<br>選択</div>
+</div>
+<div class="step" id="step3Indicator">
+<div class="step-circle">3</div>
+<div class="step-label">行き先<br>入力</div>
+</div>
+</div>
+<div class="main-content">
+<div class="section active" id="dateSection">
+<div class="section-header">
+<div class="section-title">ご希望の日付を選択</div>
+<div class="section-subtitle">30日先まで予約可能です</div>
+</div>
+<div class="calendar" id="calendar"><div class="day" data-date="2026-04-16"><div class="day-date">16</div><div class="day-label">木</div></div><div class="day" data-date="2026-04-17"><div class="day-date">17</div><div class="day-label">金</div></div><div class="day" data-date="2026-04-18"><div class="day-date">18</div><div class="day-label">土</div></div><div class="day" data-date="2026-04-19"><div class="day-date">19</div><div class="day-label">日</div></div><div class="day" data-date="2026-04-20"><div class="day-date">20</div><div class="day-label">月</div></div><div class="day" data-date="2026-04-21"><div class="day-date">21</div><div class="day-label">火</div></div><div class="day" data-date="2026-04-22"><div class="day-date">22</div><div class="day-label">水</div></div><div class="day" data-date="2026-04-23"><div class="day-date">23</div><div class="day-label">木</div></div><div class="day" data-date="2026-04-24"><div class="day-date">24</div><div class="day-label">金</div></div><div class="day" data-date="2026-04-25"><div class="day-date">25</div><div class="day-label">土</div></div><div class="day" data-date="2026-04-26"><div class="day-date">26</div><div class="day-label">日</div></div><div class="day" data-date="2026-04-27"><div class="day-date">27</div><div class="day-label">月</div></div><div class="day" data-date="2026-04-28"><div class="day-date">28</div><div class="day-label">火</div></div><div class="day" data-date="2026-04-29"><div class="day-date">29</div><div class="day-label">水</div></div><div class="day" data-date="2026-04-30"><div class="day-date">30</div><div class="day-label">木</div></div><div class="day" data-date="2026-05-01"><div class="day-date">1</div><div class="day-label">金</div></div><div class="day" data-date="2026-05-02"><div class="day-date">2</div><div class="day-label">土</div></div><div class="day" data-date="2026-05-03"><div class="day-date">3</div><div class="day-label">日</div></div><div class="day" data-date="2026-05-04"><div class="day-date">4</div><div class="day-label">月</div></div><div class="day" data-date="2026-05-05"><div class="day-date">5</div><div class="day-label">火</div></div><div class="day" data-date="2026-05-06"><div class="day-date">6</div><div class="day-label">水</div></div><div class="day" data-date="2026-05-07"><div class="day-date">7</div><div class="day-label">木</div></div><div class="day" data-date="2026-05-08"><div class="day-date">8</div><div class="day-label">金</div></div><div class="day" data-date="2026-05-09"><div class="day-date">9</div><div class="day-label">土</div></div><div class="day" data-date="2026-05-10"><div class="day-date">10</div><div class="day-label">日</div></div><div class="day" data-date="2026-05-11"><div class="day-date">11</div><div class="day-label">月</div></div><div class="day" data-date="2026-05-12"><div class="day-date">12</div><div class="day-label">火</div></div><div class="day" data-date="2026-05-13"><div class="day-date">13</div><div class="day-label">水</div></div><div class="day" data-date="2026-05-14"><div class="day-date">14</div><div class="day-label">木</div></div><div class="day" data-date="2026-05-15"><div class="day-date">15</div><div class="day-label">金</div></div></div>
+</div>
+<div class="section" id="busSection">
+<div class="section-header">
+<div class="section-title">ご利用のバスを選択</div>
+<div class="section-subtitle">各車両2台まで常設</div>
+</div>
+<div class="bus-grid" id="busGrid"></div>
+</div>
+<div class="section" id="destinationSection">
+<div class="section-header">
+<div class="section-title">行き先を入力</div>
+<div class="section-subtitle">目的地の名称や住所を入力</div>
+</div>
+<input type="text" class="destination-input" id="destination" placeholder="例: 東京駅、新宿駅">
+</div>
+<button class="btn-primary" id="proceedBtn" disabled="" onclick="proceedToPayment()">決済へ進む (¥2,200)</button>
+</div>
+</div>
+<script>
+let selectedDate=null,selectedBus=null,destination=null,currentStep=1;
+function updateProgressBar(){document.querySelectorAll('.step').forEach((el,i)=>{if(i<currentStep-1)el.classList.add('completed');else el.classList.remove('completed');if(i===currentStep-1)el.classList.add('active');else el.classList.remove('active')})}
+function showSection(step){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));if(step===1)document.getElementById('dateSection').classList.add('active');if(step===2)document.getElementById('busSection').classList.add('active');if(step===3)document.getElementById('destinationSection').classList.add('active');currentStep=step;updateProgressBar()}
+function generateCalendar(){const calendar=document.getElementById('calendar'),today=new Date(),days=['日','月','火','水','木','金','土'];for(let i=0;i<30;i++){const date=new Date(today);date.setDate(today.getDate()+i);const day=document.createElement('div');day.className='day';const dayOfWeek=days[date.getDay()];day.innerHTML=`<div class="day-date">${date.getDate()}</div><div class="day-label">${dayOfWeek}</div>`;day.dataset.date=date.toISOString().split('T')[0];day.onclick=()=>selectDate(date);calendar.appendChild(day)}}
+function selectDate(date){selectedDate=date.toISOString().split('T')[0];document.querySelectorAll('.day').forEach(d=>d.classList.remove('selected'));event.target.closest('.day').classList.add('selected');showSection(2);loadBuses()}
+async function loadBuses(){const grid=document.getElementById('busGrid');grid.innerHTML='<div class="loading">空き状況を確認中...</div>';try{const res=await fetch(`/api/availability?date=${selectedDate}`),data=await res.json();grid.innerHTML='';for(let i=1;i<=10;i++){const bus=document.createElement('div');bus.className='bus-card';const avail=data.availability.find(a=>a.busNumber===i.toString()),slots=avail?avail.availableSlots:2;bus.innerHTML=`<div class="bus-number">${i}号車</div><div class="bus-slots"><div class="slot ${slots>=1?'available':''}"></div><div class="slot ${slots>=2?'available':''}"></div></div><div class="bus-status">${slots===2?'空き2台':slots===1?'空き1台':'満席'}</div>`;if(slots>0)bus.onclick=()=>selectBus(i);else bus.classList.add('full');grid.appendChild(bus)}}catch(e){grid.innerHTML='<p style="color:red">空き状況の読み込みに失敗しました</p>'}}
+function selectBus(busNum){selectedBus=busNum;document.querySelectorAll('.bus-card').forEach(b=>b.classList.remove('selected'));event.target.closest('.bus-card').classList.add('selected');showSection(3);document.getElementById('destination').focus()}
+document.getElementById('destination').oninput=e=>{destination=e.target.value;document.getElementById('proceedBtn').disabled=!destination};
+function proceedToPayment(){localStorage.setItem('bookingData',JSON.stringify({date:selectedDate,busNumber:selectedBus.toString(),destination,busType:'NOAA JOYカート',amount:2200}));window.location.href='mobility-payment.html'}
+generateCalendar();
+</script>
+
+
+</body></html>
